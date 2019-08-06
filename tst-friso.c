@@ -46,6 +46,19 @@ static fstring getLine( FILE *fp, fstring __dst )
     return ( c == EOF && cs == __dst ) ? NULL : __dst;
 }
 
+static fstring getFile( FILE *fp, fstring __dst ) 
+{
+  register int c;
+  register fstring cs;
+
+  cs = __dst;
+  while ( ( c = getc( fp ) ) != EOF ) {
+    *cs++ = c; 
+  }
+  *cs = '\0';
+
+  return ( c == EOF && cs == __dst ) ? NULL : __dst;
+}
 /*static void printcode( fstring str ) {
   int i,length;
   length = strlen( str );
@@ -75,9 +88,8 @@ int main(int argc, char **argv)
         }
     }
     if ( __path__ == NULL ) {
-        // println("Usage: friso -init lexicon path");
-        __path__ = "/home/c/.friso";
-        // exit(0);
+        println("Usage: friso -init lexicon path");
+        exit(0);
     }
 
     s_time = clock();
@@ -113,47 +125,39 @@ int main(int argc, char **argv)
 
     e_time = clock();
 
-    // printf("Initialized in %fsec\n", (double) ( e_time - s_time ) / CLOCKS_PER_SEC );
-    // printf("Mode: %s\n", mode);
-    // printf("+-Version: %s (%s)\n", friso_version(), friso->charset == FRISO_UTF8 ? "UTF-8" : "GBK" );
-    // ___ABOUT___;
+    printf("Initialized in %fsec\n", (double) ( e_time - s_time ) / CLOCKS_PER_SEC );
+    printf("Mode: %s\n", mode);
+    printf("+-Version: %s (%s)\n", friso_version(), friso->charset == FRISO_UTF8 ? "UTF-8" : "GBK" );
+    ___ABOUT___;
 
     //set the task.
     task = friso_new_task();
 
     while ( 1 ) {
-    // {
-        // print("friso>> ");
-        getLine( stdin, line );
+        print("friso>> ");
+        /* getLine( stdin, line ); */
+        getFile( stdin, line );
         //exit the programe
-        /* if ( strcasecmp( line, "quit" ) == 0 ) { */
-        /*     ___EXIT_INFO___ */
-        /* } */
+        if ( strcasecmp( line, "quit" ) == 0 ) {
+            ___EXIT_INFO___
+        }
 
         //for ( i = 0; i < 1000000; i++ ) {
         //set the task text.
         friso_set_text( task, line );
-        // println("分词结果:");
+        println("分词结果:");
 
         s_time = clock();
-        uchar_t end_addr = 0;
-        uchar_t start_addr = 0;
         while ( ( config->next_token( friso, config, task ) ) != NULL ) {
-          if(task->token->type == __LEX_CJK_WORDS__ || task->token->type == __LEX_CJK_UNITS__) {
-              start_addr = (task->token->offset)/3;
-              end_addr = (task->token->rlen)/3 + start_addr;
-          }
-          else {
-              start_addr = (task->token->offset);
-              end_addr = task->token->rlen + start_addr;
-          }
-          /* printf("%s[%d, %d -> %d, %d]\n", task->token->word, start_addr, end_addr, task->token->offset, task->token->rlen); */
-            printf("%s\n", task->token->word );
+            printf("%s[%d, %d, %d] ", task->token->word, 
+                   task->token->offset, task->token->length, task->token->rlen );
+            /* printf("%s ", task->token->word ); */
         }
+        //}
         e_time = clock();
-        // printf("\nDone, cost < %fsec\n", ( (double)(e_time - s_time) ) / CLOCKS_PER_SEC );
-        break;
+        printf("\nDone, cost < %fsec\n", ( (double)(e_time - s_time) ) / CLOCKS_PER_SEC );
 
+        break;
     }
 
     friso_free_task( task );

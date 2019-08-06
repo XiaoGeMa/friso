@@ -212,7 +212,7 @@ FRISO_API int utf8_cjk_string( uint_t u )
     c = ( ( u >= 0x4E00 && u <= 0x9FBF )
         || ( u >= 0x2E80 && u <= 0x2EFF ) || ( u >= 0x2F00 && u <= 0x2FDF )  
         || ( u >= 0x31C0 && u <= 0x31EF ) //|| ( u >= 0x3200 && u <= 0x32FF )
-        || ( u >= 0x3300 && u <= 0x33FF ) //|| ( u >= 0x3400 && u <= 0x4DBF )
+        || ( u >= 0x3300 && u <= 0x33FF ) || ( u >= 0x3400 && u <= 0x4DB5 )
         || ( u >= 0x4DC0 && u <= 0x4DFF ) || ( u >= 0xF900 && u <= 0xFAFF )
         || ( u >= 0xFE30 && u <= 0xFE4F ) ); 
 #endif
