@@ -76,7 +76,7 @@ int main(int argc, char **argv)
     }
     if ( __path__ == NULL ) {
         // println("Usage: friso -init lexicon path");
-        __path__ = "/home/c/.friso";
+        __path__ = "/Users/c/.friso";
         // exit(0);
     }
 
